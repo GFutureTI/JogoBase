@@ -1,50 +1,39 @@
-/* Remove os atributos padrao de margem e posicionamento da body */
-*{
-    margin: 0;
-    padding: 0;
+// variáveis que controlam os eventos do personagem e do quadrado
+let personagem = document.querySelector('#personagem')
+let quadrado = document.querySelector('#quadrado')
+
+// cria função para controlar o pulo do personagem
+function pular() {
+    if(personagem.classList != 'animar') {
+        personagem.classList.add('animar')
+    }
+
+    setTimeout(function() {
+        personagem.classList.remove('animar')
+    }, 500)
 }
 
-/* Cria a formatação da div "game" setada no HTML */
-#game{
-    width: 500px;
-    height: 200px;
-    border: 1px solid black;
-}
+// adiciona um ouvinte de evento para detectar a tecla espaço pressionada *
+document.addEventListener('keydown', function(event) {
+    if(event.code === 'Space') {
+        pular()
+    }
+})
 
-/* Estiliza o personagem */
-#personagem{
-    width: 20px;
-    height: 50px;
-    background-color: red;
-    /* Ajusta o posicionamento do personagem no plano cartesiano */
-    position: relative;
-    top: -50px;
-}
+// cria função de colisão do obstáculo
+var testarColisao = setInterval(function() {
+    var topoPersonagem = parseInt(
+        window.getComputedStyle(personagem).getPropertyValue('top')
+    )
+    var EsquerdaQuadrado = parseInt(
+        window.getComputedStyle(quadrado).getPropertyValue('left')
+    )
+
+    if(EsquerdaQuadrado < 20 && EsquerdaQuadrado > 0 && topoPersonagem >= -50) {
+        quadrado.style.animation = 'none'
+        quadrado.style.display = 'none'
+        alert('Fim de Jogo')
+    }
+}, 10)
 
 
-.animar{
-    animation: personagem 500ms infinite;
-}
-
-@keyframes personagem{
-    0% {top: -50px;}
-    30% {top: -100px;}
-    70% {top: -100px;}
-    100% {top: -50px;}
-}
-
-/* cria o obstaculo para o personagem pular*/
-#quadrado{
-    width: 20px;
-    height: 20px;
-    background-color: blue;
-    position: relative;
-    top: -70px;
-    left: 481px;
-    animation: quadrado 2s infinite linear;
-}
-
-@keyframes quadrado{
-    0% {left: 481px;} /* anima a posiçaõ inicial do obstaculo*/
-    100% {left: -20px;} /*anima a posiçaõ final do obstaculo */
-}
